@@ -19,7 +19,7 @@
             "com.holybuckets.admiralsmechs.AdmiralsMechsMainFabric"
         ],
         "client": [
-            "com.holybuckets.admiralsmechs.AdmiralsMechsMainFabricClientFabric"
+            "com.holybuckets.admiralsmechs.AdmiralsMechsMainFabricClient"
         ]
     },
     "mixins": [

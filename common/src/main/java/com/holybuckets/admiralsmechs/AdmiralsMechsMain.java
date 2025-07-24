@@ -3,20 +3,18 @@ package com.holybuckets.admiralsmechs;
 
 import com.holybuckets.foundation.event.EventRegistrar;
 import com.holybuckets.admiralsmechs.config.TemplateConfig;
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.event.EventPriority;
 import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
 
 /**
  * Main instance of the mod, initialize this class statically via commonClass
  * This class will init all major Manager instances and events for the mod
  */
-public class TemplateMain {
+public class AdmiralsMechsMain {
     private static boolean DEV_MODE = false;;
     private static TemplateConfig CONFIG;
-    public static TemplateMain INSTANCE;
+    public static AdmiralsMechsMain INSTANCE;
 
-    public TemplateMain()
+    public AdmiralsMechsMain()
     {
         super();
         INSTANCE = this;
@@ -46,7 +44,7 @@ public class TemplateMain {
     }
 
     private void onServerStarting(ServerStartingEvent e) {
-        CONFIG = Balm.getConfig().getActiveConfig(TemplateConfig.class);
+        //CONFIG = Balm.getConfig().getActiveConfig(TemplateConfig.class);
         //this.DEV_MODE = CONFIG.devMode;
         this.DEV_MODE = false;
     }

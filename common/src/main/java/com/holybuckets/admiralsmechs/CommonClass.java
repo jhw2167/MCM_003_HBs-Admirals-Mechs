@@ -33,7 +33,7 @@ public class CommonClass {
 
         //RegisterConfigs
         //Balm.getConfig().registerConfig(ChallengeTempleConfig.class);
-        TemplateMain.INSTANCE = new TemplateMain();
+        AdmiralsMechsMain.INSTANCE = new AdmiralsMechsMain();
         BalmEventRegister.registerEvents();
         BalmEventRegister.registerCommands();
         ModBlocks.initialize(Balm.getBlocks());
