@@ -27,6 +27,8 @@ dependencies {
         changing = true
     }
 
+    modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
+
 }
 
 loom {

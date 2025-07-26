@@ -1,5 +1,6 @@
 package com.holybuckets.admiralsmechs;
 
+import com.holybuckets.admiralsmechs.entity.ModEntities;
 import com.holybuckets.foundation.event.BalmEventRegister;
 import com.holybuckets.admiralsmechs.block.ModBlocks;
 import com.holybuckets.admiralsmechs.block.be.ModBlockEntities;
@@ -40,6 +41,7 @@ public class CommonClass {
         ModBlockEntities.initialize(Balm.getBlockEntities());
         ModItems.initialize(Balm.getItems());
         ModMenus.initialize(Balm.getMenus());
+        ModEntities.initialize(Balm.getEntities());
         
         isInitialized = true;
     }

@@ -90,6 +90,7 @@ dependencies {
         transitive = false
     }
 
+    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
 }
 
 tasks.withType(JavaCompile).configureEach {

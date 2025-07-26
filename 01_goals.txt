@@ -2,3 +2,8 @@ Requirements
 ---
 
 
+1. Add living entity to Forge/Fabric 
+---
+
+1. Add entity type extending geckolib stuff
+2. 

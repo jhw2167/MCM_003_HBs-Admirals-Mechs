@@ -50,6 +50,9 @@ subprojects {
     repositories {
         mavenLocal()
         mavenCentral()
+        flatDir {
+            dirs 'libs'
+        }
         maven {
             name = 'Sponge / Mixin'
             url = 'https://repo.spongepowered.org/repository/maven-public/'
@@ -62,6 +65,15 @@ subprojects {
             url "https://maven.twelveiterations.com/repository/maven-public/"
             content {
                 includeGroup "net.blay09.mods"
+            }
+        }
+
+        maven {
+            name = 'GeckoLib'
+            url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+            content {
+                includeGroupByRegex("software\\.bernie.*")
+                includeGroup("com.eliotlash.mclib")
             }
         }
     }
