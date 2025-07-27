@@ -15,6 +15,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -36,15 +37,16 @@ public class TankEntity extends LivingEntity implements GeoEntity, GeoAnimatable
 
     public static final float DEFAULT_SCALE = 0.5f;
 
-    public static AttributeSupplier.Builder createMobAttributes() {
-        return LivingEntity.createLivingAttributes()
+    public TankEntity(EntityType<? extends LivingEntity> $$0, Level $$1) {
+        super(ModEntities.tank.get(), $$1);
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return Horse.createBaseHorseAttributes()
             .add(Attributes.ATTACK_KNOCKBACK)
             .add(Attributes.MAX_HEALTH, ModEntities.MECH_HEALTH);
     }
 
-    public TankEntity(EntityType<? extends LivingEntity> $$0, Level $$1) {
-        super(ModEntities.tank.get(), $$1);
-    }
 
     @Override
     public Iterable<ItemStack> getArmorSlots() {
@@ -76,4 +78,5 @@ public class TankEntity extends LivingEntity implements GeoEntity, GeoAnimatable
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.geoCache;
     }
+
 }

@@ -14,12 +14,13 @@ public class ModEntities {
 
     public static final float MECH_HEALTH = 100.0f;
 
-    public static DeferredObject<EntityType<LivingEntity>> tank;
+    public static DeferredObject<EntityType<TankEntity>> tank;
 
     public static void initialize(BalmEntities balmEntities) {
         // Register entities here
         tank = balmEntities.registerEntity( id("tank"),
-            getBuilder(TankEntity::new, MobCategory.CREATURE, 1.0f, 2.0f) );
+            getBuilder(TankEntity::new, MobCategory.CREATURE, 1.0f, 2.0f),
+            TankEntity::createAttributes);
 
     }
 

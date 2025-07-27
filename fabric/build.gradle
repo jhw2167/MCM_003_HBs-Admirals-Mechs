@@ -32,6 +32,7 @@ dependencies {
 }
 
 loom {
+
     if (project(":common").file("src/main/resources/${mod_id}.accesswidener").exists()) {
         accessWidenerPath.set(project(":common").file("src/main/resources/${mod_id}.accesswidener"))
     }
@@ -52,6 +53,7 @@ loom {
             runDir("run")
         }
     }
+
 }
 
 tasks.withType(JavaCompile).configureEach {

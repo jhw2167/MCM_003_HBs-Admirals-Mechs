@@ -1,6 +1,14 @@
 Requirements
 ---
 
+GRADLE IS DUMB AND VERY BAD
+- two plugins with the same "configuration" somewhere cannot be apart of the same project
+- so I cannot use 'loom' to remap geckolib to the mojang mappings
+- therefore my common dir (dependent on a compileOnly instance of the fabric compiled code) is referencing bad fabric mappings
+
+- therefore, cloned geckolib and compiled core instance locally, for flatDir compileOnly work
+- this works because geckolib is entirely multiloader, all classes are identical for forge/fabric instance at runtime
+
 
 1. Add living entity to Forge/Fabric 
 ---

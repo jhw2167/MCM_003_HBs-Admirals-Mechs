@@ -24,12 +24,14 @@ base {
     version="${mod_version}"
     archivesName = "${mod_name}-common-${minecraft_version}"
 }
+
 minecraft {
     version(minecraft_version)
     if(file("src/main/resources/${mod_id}.accesswidener").exists()){
         accessWideners(file("src/main/resources/${mod_id}.accesswidener"))
     }
 }
+
 
 dependencies {
      compileOnly group:'org.spongepowered', name:'mixin', version:'0.8.5'
@@ -45,7 +47,10 @@ dependencies {
         changing = true
     }
 
-    implementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
+    //modImplementation( "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}" )
+    //compileOnly files("libs/geckolib-core-${geckolib_core_version}.jar")
+    //add("modImplementation", "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}")
+    compileOnly "software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}"
 
 }
 
