@@ -19,7 +19,7 @@ public class ModEntities {
     public static void initialize(BalmEntities balmEntities) {
         // Register entities here
         tank = balmEntities.registerEntity( id("tank"),
-            getBuilder(TankEntity::new, MobCategory.CREATURE, 1.0f, 2.0f),
+            getBuilder(TankEntity::new, MobCategory.MONSTER, 1.0f, 2.0f),
             TankEntity::createAttributes);
 
     }
