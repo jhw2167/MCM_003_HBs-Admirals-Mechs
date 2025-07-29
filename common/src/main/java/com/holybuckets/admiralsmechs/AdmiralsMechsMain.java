@@ -1,6 +1,7 @@
 package com.holybuckets.admiralsmechs;
 
 
+import com.holybuckets.admiralsmechs.entity.MechBase;
 import com.holybuckets.foundation.event.EventRegistrar;
 import com.holybuckets.admiralsmechs.config.TemplateConfig;
 import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
@@ -36,6 +37,7 @@ public class AdmiralsMechsMain {
 
         //Events
         EventRegistrar registrar = EventRegistrar.getInstance();
+        MechBase.init(registrar);
         //ChallengeBlockBehavior.init(registrar);
 
 
