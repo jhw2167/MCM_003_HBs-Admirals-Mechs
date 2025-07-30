@@ -6,6 +6,7 @@ import com.holybuckets.admiralsmechs.entity.state.State;
 import com.holybuckets.admiralsmechs.entity.state.StateEvent;
 import com.holybuckets.admiralsmechs.entity.state.TankState;
 import net.minecraft.core.NonNullList;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -30,7 +32,7 @@ public class TankEntity extends MechMountable {
     public static final float DEFAULT_SCALE = 0.5f;
 
     static final List<String> STATES = List.of("idle", "forward", "backward", "left-turn", "right-turn");
-    TankState currentState;
+
 
     public TankEntity(EntityType<? extends MechMountable> $$0, Level $$1) {
         super($$0, $$1);
@@ -43,6 +45,7 @@ public class TankEntity extends MechMountable {
             .add(Attributes.MAX_HEALTH, ModEntities.MECH_HEALTH);
     }
 
+    //** BASIC FROM SUPER
 
     @Override
     public Iterable<ItemStack> getArmorSlots() {
@@ -65,6 +68,24 @@ public class TankEntity extends MechMountable {
     }
 
 
+    //* RIDING
+
+    @Override
+    protected Vec3 getRiddenInput(Player $$0, Vec3 $$1) {
+        if(this.getControllingPassenger() instanceof Player) {
+            if(this.currentState == TankState.FORWARD) {
+                return new Vec3(1, 0, 0);
+            }
+        }
+        return Vec3.ZERO;
+    }
+
+    @Override
+    protected float getRiddenSpeed(Player $$0) {
+        return super.getRiddenSpeed($$0);
+    }
+
+
     @Override
     public double getPassengersRidingOffset() {
         return 2.5F;
@@ -72,7 +93,7 @@ public class TankEntity extends MechMountable {
 
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
-        if (this.getControllingPassenger()  == null) {
+        if (this.getDriver()  == null) {
             if (isServerSide()) {
                 player.setYRot(this.getYRot());
                 player.setXRot(this.getXRot());
@@ -83,6 +104,43 @@ public class TankEntity extends MechMountable {
         }
 
         return InteractionResult.sidedSuccess(this.level().isClientSide);
+    }
+
+    @Override
+    public void travel(Vec3 pos)
+    {
+        if (this.isAlive() && this.isVehicle()) {
+            Player p = this.getDriver();
+            if( p == null ) return;
+            //ServerPlayer pilot = (ServerPlayer) p;
+
+            // ROTATE Vehicle
+            this.setYRot(p.getYRot());
+            this.yRotO = this.getYRot();
+            this.setXRot(p.getXRot() * 0.5F);
+            this.setRot(this.getYRot(), this.getXRot());
+            this.setYBodyRot(this.getYRot());
+            this.setYHeadRot(this.getYRot());
+
+            float f = p.xxa * 0.5F;
+            float f1 = p.zza * 0.5F;
+
+            // BOOST
+            /*
+            if (isServerSide()) {
+                if (this.actionController.isBoost()) {
+                    this.setSpeed(1.5F);
+                } else {
+                    this.setSpeed(0.5F);
+                }
+            }
+            */
+
+            super.travel(new Vec3(f, pos.y, f1));
+            this.hasImpulse = true;
+        } else {
+            super.travel(pos);
+        }
     }
 
     @Override
@@ -122,7 +180,7 @@ public class TankEntity extends MechMountable {
          * @param event
          */
         protected void updateState(StateEvent event) {
-            TankState newState = this.currentState.update( event );
+            State newState = this.currentState.update( event );
             if (newState != this.currentState) {
                 this.currentState.exit(this);
                 this.currentState = newState;
