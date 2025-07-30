@@ -34,6 +34,7 @@ public abstract class MechMountable extends MechBase {
         this.flySpeed = 0.5f;
         this.strafeSpeed = 1f;
         this.maxUpStep = 1.6F;
+        this.orientation = new Vec3(0, 0, 0);
     }
 
     //** FROM SUPER
@@ -142,6 +143,18 @@ public abstract class MechMountable extends MechBase {
 
     protected boolean isClientSide() {
         return this.level().isClientSide();
+    }
+
+    public void updateOrientation(Vec3 delta) {
+        this.orientation = this.orientation.add(delta);
+    }
+
+    public void setOrientation(Vec3 newOrientation) {
+        this.orientation = newOrientation;
+    }
+
+    public Vec3 getOrientation() {
+        return this.orientation;
     }
 
     public Player getDriver() {

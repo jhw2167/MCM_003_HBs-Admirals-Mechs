@@ -114,10 +114,17 @@ public class TankEntity extends MechMountable {
             if( p == null ) return;
             //ServerPlayer pilot = (ServerPlayer) p;
 
-            // ROTATE Vehicle
-            this.setYRot(p.getYRot());
+            // Update orientation based on current state
+            if (this.currentState == TankState.LEFT_TURN) {
+                this.updateOrientation(new Vec3(0, -1, 0));
+            } else if (this.currentState == TankState.RIGHT_TURN) {
+                this.updateOrientation(new Vec3(0, 1, 0));
+            }
+
+            // ROTATE Vehicle based on orientation
+            this.setYRot((float)this.orientation.y);
             this.yRotO = this.getYRot();
-            this.setXRot(p.getXRot() * 0.5F);
+            this.setXRot((float)this.orientation.x);
             this.setRot(this.getYRot(), this.getXRot());
             this.setYBodyRot(this.getYRot());
             this.setYHeadRot(this.getYRot());
