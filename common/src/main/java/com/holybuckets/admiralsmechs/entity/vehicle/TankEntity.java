@@ -33,10 +33,33 @@ public class TankEntity extends MechMountable {
 
     static final List<String> STATES = List.of("idle", "forward", "backward", "left_turn", "right_turn");
 
+    protected boolean firePrimary = false;
+    protected boolean fireSecondary = false;
+    protected WeaponBase primaryWeapon;
+    protected WeaponBase secondaryWeapon;
+
 
     public TankEntity(EntityType<? extends MechMountable> $$0, Level $$1) {
         super($$0, $$1);
         this.currentState = TankState.getInitialState(this);
+        this.primaryWeapon = new WeaponBase();
+        this.secondaryWeapon = new WeaponBase(); 
+    }
+
+    public void setFirePrimary(boolean firing) {
+        this.firePrimary = firing;
+    }
+
+    public void setFireSecondary(boolean firing) {
+        this.fireSecondary = firing;
+    }
+
+    public boolean isFirePrimary() {
+        return firePrimary;
+    }
+
+    public boolean isFireSecondary() {
+        return fireSecondary;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
