@@ -1,5 +1,6 @@
 package com.holybuckets.admiralsmechs.entity.state;
 
+import com.holybuckets.admiralsmechs.entity.MechBase;
 import net.minecraft.world.entity.Entity;
 
 import java.util.HashMap;
@@ -16,7 +17,7 @@ public abstract class State {
      * Called when the state is entered.
      * This method is invoked when the state is first entered.
      */
-    public void enter(Entity entity) {
+    public void enter(MechBase entity) {
         //nothing
     }
 
@@ -24,7 +25,7 @@ public abstract class State {
      * Called when the state is exited.
      * This method is invoked when transitioning out of the state.
      */
-    public void exit(Entity entity) {
+    public void exit(MechBase entity) {
         //nothing
     }
 

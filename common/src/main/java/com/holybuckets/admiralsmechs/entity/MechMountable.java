@@ -123,9 +123,9 @@ public abstract class MechMountable extends MechBase {
             case InputConstants.KEY_S:
                 return "backward";
             case InputConstants.KEY_A:
-                return "left-turn";
+                return "left_turn";
             case InputConstants.KEY_D:
-                return "right-turn";
+                return "right_turn";
             case InputConstants.MOUSE_BUTTON_LEFT:
                 return "fire-primary";
             case InputConstants.MOUSE_BUTTON_RIGHT:
@@ -147,6 +147,20 @@ public abstract class MechMountable extends MechBase {
 
     public void updateOrientation(Vec3 delta) {
         this.orientation = this.orientation.add(delta);
+
+        //check Y
+        // 0 - south, spawn angle, 180 north
+        if (this.orientation.y >180 ) {
+            this.orientation = this.orientation.add(new Vec3(0, -360, 0));
+        } else if (this.orientation.y <= -180) {
+            this.orientation = this.orientation.add(new Vec3(0, 360, 0));
+        }
+
+        this.setYRot((float)orientation.y);
+        this.yRotO = this.getYRot();
+        this.setXRot((float)this.orientation.x);
+        this.setYBodyRot(this.getYRot());
+        this.setYHeadRot(this.getYRot());
     }
 
     public void setOrientation(Vec3 newOrientation) {
@@ -174,7 +188,6 @@ public abstract class MechMountable extends MechBase {
         Entity e =  p.getControlledVehicle();
 
         if(e == null || !(e instanceof MechMountable)) return;
-        if(!(p instanceof ServerPlayer)) return;
 
         MechMountable mech = (MechMountable) e;
         String eventString = mech.mapKeyToEvent(event.getMessage().code);

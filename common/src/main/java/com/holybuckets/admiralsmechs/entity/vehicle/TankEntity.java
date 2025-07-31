@@ -31,7 +31,7 @@ public class TankEntity extends MechMountable {
 
     public static final float DEFAULT_SCALE = 0.5f;
 
-    static final List<String> STATES = List.of("idle", "forward", "backward", "left-turn", "right-turn");
+    static final List<String> STATES = List.of("idle", "forward", "backward", "left_turn", "right_turn");
 
 
     public TankEntity(EntityType<? extends MechMountable> $$0, Level $$1) {
@@ -106,47 +106,59 @@ public class TankEntity extends MechMountable {
         return InteractionResult.sidedSuccess(this.level().isClientSide);
     }
 
+    private static int cCount = 0;
+    private static Vec3 LEFT_TURN = new Vec3(0, -3F, 0);
+    private static Vec3 RIGHT_TURN = new Vec3(0, 3F, 0);
     @Override
-    public void travel(Vec3 pos)
-    {
+    public void travel(Vec3 pos) {
         if (this.isAlive() && this.isVehicle()) {
             Player p = this.getDriver();
-            if( p == null ) return;
-            //ServerPlayer pilot = (ServerPlayer) p;
+            if (p == null) return;
 
-            // Update orientation based on current state
+            float forward = p.zza; // forward/backward throttle
+
+            if(this.level().isClientSide()) {
+                if(cCount % 80 == 0) {
+                    int i = 0;
+                }
+            } else {
+                if(cCount % 80 == 0) {
+                    int i = 0;
+                }
+            }
+            cCount++;
+
+
+            // Handle tank rotation using A/D keys
             if (this.currentState == TankState.LEFT_TURN) {
-                this.updateOrientation(new Vec3(0, -1, 0));
+                this.updateOrientation(LEFT_TURN);
+                //this.originalTravel(Vec3.ZERO);
+                //return;
             } else if (this.currentState == TankState.RIGHT_TURN) {
-                this.updateOrientation(new Vec3(0, 1, 0));
+                this.updateOrientation(RIGHT_TURN);
+                //this.originalTravel(Vec3.ZERO);
+                //return;
+            } else {
+                this.updateOrientation(Vec3.ZERO);
             }
 
-            // ROTATE Vehicle based on orientation
-            this.setYRot((float)this.orientation.y);
-            this.yRotO = this.getYRot();
-            this.setXRot((float)this.orientation.x);
-            this.setRot(this.getYRot(), this.getXRot());
-            this.setYBodyRot(this.getYRot());
-            this.setYHeadRot(this.getYRot());
+            // Convert forward throttle into world-relative movement
+
+            float yawRad = (float) Math.toRadians(this.orientation.y);
+            double dx = forward * Math.sin(yawRad);
+            double dz =  forward * Math.cos(yawRad);
 
             float f = p.xxa * 0.5F;
             float f1 = p.zza * 0.5F;
 
-            // BOOST
-            /*
-            if (isServerSide()) {
-                if (this.actionController.isBoost()) {
-                    this.setSpeed(1.5F);
-                } else {
-                    this.setSpeed(0.5F);
-                }
-            }
-            */
-
-            super.travel(new Vec3(f, pos.y, f1));
+            //Vec3 delta = new Vec3(dx, pos.y, dz);
+            //Vec3 delta = new Vec3(f, pos.y, f1);
+            Vec3 delta = new Vec3(0, pos.y, f1);
+            this.originalTravel(delta);
             this.hasImpulse = true;
+
         } else {
-            super.travel(pos);
+            //originalTravel(pos);
         }
     }
 
@@ -168,8 +180,8 @@ public class TankEntity extends MechMountable {
         controllers.add( new AnimationController<>(this, "tank", state -> PlayState.STOP)
             .triggerableAnim("forward", RawAnimation.begin().thenLoop(a("forward")))
             .triggerableAnim("backward", RawAnimation.begin().thenLoop(a("backward")))
-            .triggerableAnim("left-turn", RawAnimation.begin().thenPlay(a("left-turn")))
-            .triggerableAnim("right-turn", RawAnimation.begin().thenPlay(a("right-turn")))
+            .triggerableAnim("left_turn", RawAnimation.begin().thenPlay(a("left_turn")))
+            .triggerableAnim("right_turn", RawAnimation.begin().thenPlay(a("right_turn")))
             .triggerableAnim("idle", RawAnimation.begin().thenLoop(a("idle"))));
     }
         private String a(String s) { return "animation.ironclad." + s; }

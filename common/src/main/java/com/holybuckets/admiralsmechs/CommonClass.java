@@ -1,5 +1,6 @@
 package com.holybuckets.admiralsmechs;
 
+import com.holybuckets.admiralsmechs.entity.MechBase;
 import com.holybuckets.admiralsmechs.entity.ModEntities;
 import com.holybuckets.foundation.event.BalmEventRegister;
 import com.holybuckets.admiralsmechs.block.ModBlocks;
@@ -8,6 +9,7 @@ import com.holybuckets.admiralsmechs.client.ModRenderers;
 import com.holybuckets.admiralsmechs.item.ModItems;
 import com.holybuckets.admiralsmechs.menu.ModMenus;
 import com.holybuckets.admiralsmechs.platform.Services;
+import com.holybuckets.foundation.event.EventRegistrar;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.client.BalmClient;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -56,5 +58,6 @@ public class CommonClass {
 
     public static void initClient() {
         ModRenderers.clientInitialize(BalmClient.getRenderers());
+        //EventRegistrar reg = EventRegistrar.getInstance();
     }
 }
