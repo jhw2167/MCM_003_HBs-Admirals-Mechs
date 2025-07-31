@@ -106,6 +106,22 @@ public class TankEntity extends MechMountable {
         return InteractionResult.sidedSuccess(this.level().isClientSide);
     }
 
+    private void handleWeaponsOnTick() {
+       if( this.firePrimary ) {
+            this.primaryWeapon.fire( this.getMuzzlePosition(), this.orientation );
+       } else if( this.fireSecondary ) {
+            this.secondaryWeapon.fire( this.getMuzzlePosition(), this.orientation );
+       }
+    }
+
+    //** TICKING METHODS
+
+    @Override
+    public void tick() {
+        this.handleWeaponsOnTick();
+        super.tick();
+    }
+
     private static int cCount = 0;
     private static Vec3 LEFT_TURN = new Vec3(0, -3F, 0);
     private static Vec3 RIGHT_TURN = new Vec3(0, 3F, 0);
