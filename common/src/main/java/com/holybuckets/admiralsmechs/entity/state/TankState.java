@@ -2,7 +2,6 @@ package com.holybuckets.admiralsmechs.entity.state;
 
 import com.holybuckets.admiralsmechs.entity.MechBase;
 import com.holybuckets.admiralsmechs.entity.vehicle.TankEntity;
-import net.minecraft.world.entity.Entity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,12 +51,38 @@ public class TankState extends State {
     }
 
 
-     @Override
+    @Override
     public TankState update(StateEvent event) {
         if(STATES.containsKey(event.eventName)) {
             return STATES.get(event.eventName);
         }
+
+        if(event.secondaryEvent != null)  {
+            if(STATES.containsKey(event.secondaryEvent)) {
+                return STATES.get(event.secondaryEvent);
+            }
+        }
+
         return this;
+    }
+
+
+    @Override
+    public TankState update(StateEvent event, MechBase entity)
+    {
+        TankState returnState = update(event);
+        if( eitherMatch(event, TankEntity.FIRE_PRIMARY_EVENT ) )
+            ((TankEntity) entity).setFirePrimary( true );
+        else if( eitherMatch(event, TankEntity.FIRE_SECONDARY_EVENT ) ) {
+            ((TankEntity) entity).setFireSecondary( true );
+        }
+
+        return returnState;
+    }
+
+    private static boolean eitherMatch(StateEvent event, String matchKey) {
+        return event.eventName.equals(matchKey) ||
+         (event.secondaryEvent != null && event.secondaryEvent.equals(matchKey));
     }
 
 }

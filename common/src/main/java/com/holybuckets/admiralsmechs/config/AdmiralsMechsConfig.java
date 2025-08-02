@@ -3,10 +3,11 @@ package com.holybuckets.admiralsmechs.config;
 import com.holybuckets.admiralsmechs.Constants;
 import net.blay09.mods.balm.api.config.reflection.Comment;
 import net.blay09.mods.balm.api.config.reflection.Config;
+import net.blay09.mods.balm.api.config.reflection.Synced;
 
 
 @Config(Constants.MOD_ID)
-public class TemplateConfig {
+public class AdmiralsMechsConfig {
 
     @Comment("devMode==true disables portal spawns so the player can build and save new challenges")
     public boolean devMode = false;

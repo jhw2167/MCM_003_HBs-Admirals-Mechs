@@ -5,6 +5,7 @@ import com.holybuckets.admiralsmechs.entity.ModEntities;
 import com.holybuckets.admiralsmechs.entity.state.State;
 import com.holybuckets.admiralsmechs.entity.state.StateEvent;
 import com.holybuckets.admiralsmechs.entity.state.TankState;
+import com.holybuckets.admiralsmechs.entity.weapon.TankFlameThrower;
 import com.holybuckets.admiralsmechs.entity.weapon.TankSmallShot;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.InteractionHand;
@@ -37,10 +38,10 @@ public class TankEntity extends MechMountable {
     protected int primaryCooldown = 0;
     protected int secondaryCooldown = 0;
     protected TankSmallShot primaryWeapon;
-    protected TankSmallShot secondaryWeapon;
+    protected TankFlameThrower secondaryWeapon;
 
     private static final int PRIMARY_COOLDOWN_TICKS = 25;
-    private static final int SECONDARY_COOLDOWN_TICKS = 60;
+    private static final int SECONDARY_COOLDOWN_TICKS = 0;
 
     public static final String FIRE_PRIMARY_EVENT = "fire_primary";
     public static final String FIRE_SECONDARY_EVENT = "fire_secondary";

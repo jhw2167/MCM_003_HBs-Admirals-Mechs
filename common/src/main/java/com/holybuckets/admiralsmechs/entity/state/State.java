@@ -1,6 +1,7 @@
 package com.holybuckets.admiralsmechs.entity.state;
 
 import com.holybuckets.admiralsmechs.entity.MechBase;
+import com.holybuckets.admiralsmechs.entity.vehicle.TankEntity;
 import net.minecraft.world.entity.Entity;
 
 import java.util.HashMap;
@@ -38,6 +39,10 @@ public abstract class State {
             return STATES.get(event.eventName);
         }
         return this;
+    }
+
+    public State update(StateEvent event, MechBase entity) {
+        return update(event);
     }
 
 }

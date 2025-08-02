@@ -6,6 +6,7 @@ import com.holybuckets.admiralsmechs.entity.state.StateEvent;
 import com.holybuckets.admiralsmechs.entity.state.TankState;
 import com.holybuckets.foundation.event.EventRegistrar;
 import com.holybuckets.foundation.event.custom.ClientInputEvent;
+import com.holybuckets.foundation.networking.ClientInputMessage;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -16,6 +17,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public abstract class MechMountable extends MechBase {
 
@@ -127,9 +132,9 @@ public abstract class MechMountable extends MechBase {
             case InputConstants.KEY_D:
                 return "right_turn";
             case InputConstants.MOUSE_BUTTON_LEFT:
-                return "fire-primary";
+                return "fire_primary";
             case InputConstants.MOUSE_BUTTON_RIGHT:
-                return "fire-secondary";
+                return "fire_secondary";
             case InputConstants.KEY_SPACE:
                 return "jump";
         }
@@ -190,11 +195,22 @@ public abstract class MechMountable extends MechBase {
         if(e == null || !(e instanceof MechMountable)) return;
 
         MechMountable mech = (MechMountable) e;
-        String eventString = mech.mapKeyToEvent(event.getMessage().code);
-        if( eventString == null ) return;
+        ClientInputMessage message = event.getMessage();
+        List<Integer> codes = event.getKeyCodes().stream().limit(2).toList();
+        StateEvent stateEvent;
+        if( codes.isEmpty() || codes.size() < 2) {
+            stateEvent = new StateEvent(mech, mech.mapKeyToEvent(message.code));
+        } else {
+            String e1 = mech.mapKeyToEvent(codes.get(0));
+            String e2 = mech.mapKeyToEvent(codes.get(1));
+            stateEvent = new StateEvent(mech, e1, e2);
+        }
 
-        LoggerProject.logDebug("015001", "Mech event: " + eventString);
-        StateEvent stateEvent = new StateEvent(mech, eventString);
+        if( stateEvent.getEventName() == null ) {
+            if(mech.lastClientInput == -1) return;
+        }
+        mech.lastClientInput = message.code;
+
         mech.updateState(stateEvent);
     }
 

@@ -3,7 +3,7 @@ package com.holybuckets.admiralsmechs;
 
 import com.holybuckets.admiralsmechs.entity.MechBase;
 import com.holybuckets.foundation.event.EventRegistrar;
-import com.holybuckets.admiralsmechs.config.TemplateConfig;
+import com.holybuckets.admiralsmechs.config.AdmiralsMechsConfig;
 import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
 
 
@@ -13,7 +13,7 @@ import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
  */
 public class AdmiralsMechsMain {
     private static boolean DEV_MODE = false;;
-    private static TemplateConfig CONFIG;
+    private static AdmiralsMechsConfig CONFIG;
     public static AdmiralsMechsMain INSTANCE;
 
     public AdmiralsMechsMain()

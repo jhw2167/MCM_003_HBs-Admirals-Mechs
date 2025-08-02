@@ -2,6 +2,7 @@ package com.holybuckets.admiralsmechs.entity.weapon;
 
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.level.Level;
@@ -45,20 +46,16 @@ public class TankFlameThrower extends WeaponBase {
         // Convert angles to radians
         float yawRad = (float) Math.toRadians(direction.y);
         float pitchRad = (float) Math.toRadians(direction.x);
+        float clampedPitch = Mth.clamp((float) (-direction.x*0.5), -10.0F, 20.0F);
 
         // Calculate direction vector
         double x = -(Math.sin(yawRad) * Math.cos(pitchRad));
-        double y = -Math.sin(pitchRad);
+        double y = Math.sin(clampedPitch);
         double z = Math.cos(yawRad) * Math.cos(pitchRad);
 
         SmallFireball fireball = new SmallFireball(
             level, 
-            this.owner,
-            x, y, z
-        );
-
-        fireball.setPos(muzzlePos.x, muzzlePos.y, muzzlePos.z);
-        fireball.setDeltaMovement(
+            muzzlePos.x, muzzlePos.y, muzzlePos.z,
             x * PROJECTILE_SPEED,
             y * PROJECTILE_SPEED,
             z * PROJECTILE_SPEED

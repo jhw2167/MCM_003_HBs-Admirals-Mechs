@@ -163,6 +163,12 @@ public abstract class MechBase extends LivingEntity implements GeoEntity, GeoAni
         this.calculateEntityAnimation(this instanceof FlyingAnimal);
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+    }
+
+
     public MechBase(EntityType<? extends LivingEntity> entityType, Level level) {
         super(entityType, level);
     }
