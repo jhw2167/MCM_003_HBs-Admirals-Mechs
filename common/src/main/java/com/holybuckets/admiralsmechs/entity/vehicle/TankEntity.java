@@ -5,15 +5,13 @@ import com.holybuckets.admiralsmechs.entity.ModEntities;
 import com.holybuckets.admiralsmechs.entity.state.State;
 import com.holybuckets.admiralsmechs.entity.state.StateEvent;
 import com.holybuckets.admiralsmechs.entity.state.TankState;
+import com.holybuckets.admiralsmechs.entity.weapon.TankSmallShot;
 import net.minecraft.core.NonNullList;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.horse.Horse;
-import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -25,6 +23,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class TankEntity extends MechMountable {
@@ -35,23 +34,30 @@ public class TankEntity extends MechMountable {
 
     protected boolean firePrimary = false;
     protected boolean fireSecondary = false;
-    protected WeaponBase primaryWeapon;
-    protected WeaponBase secondaryWeapon;
+    protected int primaryCooldown = 0;
+    protected int secondaryCooldown = 0;
+    protected TankSmallShot primaryWeapon;
+    protected TankSmallShot secondaryWeapon;
 
+    private static final int PRIMARY_COOLDOWN_TICKS = 25;
+    private static final int SECONDARY_COOLDOWN_TICKS = 60;
+
+    public static final String FIRE_PRIMARY_EVENT = "fire_primary";
+    public static final String FIRE_SECONDARY_EVENT = "fire_secondary";
 
     public TankEntity(EntityType<? extends MechMountable> $$0, Level $$1) {
         super($$0, $$1);
         this.currentState = TankState.getInitialState(this);
-        this.primaryWeapon = new WeaponBase();
-        this.secondaryWeapon = new WeaponBase(); 
+        this.primaryWeapon = new TankSmallShot($$1, null);
+        this.secondaryWeapon = null;
     }
 
     public void setFirePrimary(boolean firing) {
-        this.firePrimary = firing;
+        this.firePrimary = firing && this.primaryCooldown <= 0;
     }
 
     public void setFireSecondary(boolean firing) {
-        this.fireSecondary = firing;
+        this.fireSecondary = firing && this.secondaryCooldown <= 0;
     }
 
     public boolean isFirePrimary() {
@@ -60,6 +66,29 @@ public class TankEntity extends MechMountable {
 
     public boolean isFireSecondary() {
         return fireSecondary;
+    }
+
+
+    public Vec3 getMuzzlePosition() {
+        //Move 1 unit in x and z direction proportional to this.orientation
+        double yRot = this.orientation.y;
+        if(this.getDriver() != null)
+            yRot = this.getDriver().getYRot();
+        double yaw = Math.toRadians(yRot);
+        double xOffset = -(Math.sin(yaw)*2);
+        double zOffset = Math.cos(yaw)*2;
+        return this.position().add(xOffset, 1.8, zOffset);
+    }
+
+    /**
+     * x - pitch, y - yaw
+     * @return
+     */
+    @Nullable
+    public Vec3 getMuzzleAngles() {
+        if(this.getDriver() == null) return null;
+        Player p = this.getDriver();
+        return new Vec3(p.getXRot(), p.getYRot(), 0);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -115,7 +144,8 @@ public class TankEntity extends MechMountable {
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    public InteractionResult interact(Player player, InteractionHand hand)
+    {
         if (this.getDriver()  == null) {
             if (isServerSide()) {
                 player.setYRot(this.getYRot());
@@ -124,17 +154,30 @@ public class TankEntity extends MechMountable {
             }
 
             this.updateState( new StateEvent(this, "idle") );
+            this.primaryWeapon = new TankSmallShot(this.level(), player);
         }
+
 
         return InteractionResult.sidedSuccess(this.level().isClientSide);
     }
 
     private void handleWeaponsOnTick() {
        if( this.firePrimary ) {
-            this.primaryWeapon.fire( this.getMuzzlePosition(), this.orientation );
+            this.primaryWeapon.fire( this.getMuzzlePosition(), getMuzzleAngles() );
+            this.primaryCooldown = PRIMARY_COOLDOWN_TICKS;
+            this.firePrimary = false;
        } else if( this.fireSecondary ) {
-            this.secondaryWeapon.fire( this.getMuzzlePosition(), this.orientation );
-       }
+            this.secondaryWeapon.fire( this.getMuzzlePosition(), getMuzzleAngles() );
+            this.secondaryCooldown = SECONDARY_COOLDOWN_TICKS;
+            this.fireSecondary = false;
+       } else {
+            if(this.primaryCooldown > 0)
+                this.primaryCooldown--;
+
+            if(this.secondaryCooldown > 0)
+                this.secondaryCooldown--;
+        }
+
     }
 
     //** TICKING METHODS
@@ -238,7 +281,7 @@ public class TankEntity extends MechMountable {
          * @param event
          */
         protected void updateState(StateEvent event) {
-            State newState = this.currentState.update( event );
+            State newState = this.currentState.update( event, this );
             if (newState != this.currentState) {
                 this.currentState.exit(this);
                 this.currentState = newState;
