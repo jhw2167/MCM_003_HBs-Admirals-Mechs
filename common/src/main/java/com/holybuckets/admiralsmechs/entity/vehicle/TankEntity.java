@@ -49,7 +49,7 @@ public class TankEntity extends MechMountable {
         super($$0, $$1);
         this.currentState = TankState.getInitialState(this);
         this.primaryWeapon = new TankSmallShot($$1, null);
-        this.secondaryWeapon = null;
+        this.secondaryWeapon = new TankFlameThrower($$1, null);
     }
 
     public void setFirePrimary(boolean firing) {
@@ -155,6 +155,7 @@ public class TankEntity extends MechMountable {
 
             this.updateState( new StateEvent(this, "idle") );
             this.primaryWeapon = new TankSmallShot(this.level(), player);
+            this.secondaryWeapon = new TankFlameThrower(this.level(), player);
         }
 
 
